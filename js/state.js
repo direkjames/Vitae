@@ -63,7 +63,8 @@ export const PERSONAL_FIELDS = [
 ];
 
 /* ---------- Factories ---------- */
-export const newExperience = () => ({ id: uid(), role: '', company: '', location: '', start: '', end: '', current: false, bullets: [''] });
+export const EMPLOYMENT_TYPES = ['Full-time', 'Part-time', 'Contractual', 'Project-based', 'Freelance', 'Self-employed', 'Internship', 'OJT', 'Apprenticeship', 'Seasonal', 'Volunteer'];
+export const newExperience = () => ({ id: uid(), role: '', company: '', type: '', location: '', start: '', end: '', current: false, bullets: [''] });
 export const newProject = () => ({ id: uid(), name: '', url: '', tech: '', description: '', bullets: [] });
 export const newSkillGroup = () => ({ id: uid(), name: '', items: '' });
 export const newEducation = () => ({ id: uid(), school: '', degree: '', location: '', start: '', end: '', details: '' });

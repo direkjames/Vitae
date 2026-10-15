@@ -50,7 +50,7 @@ function experience(r) {
     .map(
       (e) => `<div class="vt-entry">
   <div class="vt-entry-head"><div class="vt-entry-title">${esc(e.role || e.company)}</div><div class="vt-entry-date">${dateRange(e.start, e.end, e.current)}</div></div>
-  ${has(e.role) && (has(e.company) || has(e.location)) ? `<div class="vt-entry-sub">${[e.company, e.location].filter(has).map(esc).join(' · ')}</div>` : ''}
+  ${has(e.role) && (has(e.company) || has(e.location) || has(e.type)) ? `<div class="vt-entry-sub">${[e.company, e.type, e.location].filter(has).map(esc).join(' · ')}</div>` : ''}
   ${bulletList(e.bullets)}
 </div>`,
     )
@@ -199,7 +199,7 @@ const H = {
       .filter((e) => has(e.role) || has(e.company))
       .map((e) => {
         const top = has(e.company) ? e.company : e.role;
-        const role = has(e.company) && has(e.role) ? e.role : '';
+        const role = [has(e.company) && has(e.role) ? e.role : '', e.type].filter(has).join(', ');
         return `<div class="vt-entry">${H.row(`<b>${esc(top)}</b>`, esc(e.location || ''))}${role || dateRange(e.start, e.end, e.current) ? H.row(`<i>${esc(role)}</i>`, dateRange(e.start, e.end, e.current), 'vt-hsub') : ''}${bulletList(e.bullets)}</div>`;
       })
       .join('');
@@ -256,7 +256,7 @@ export function renderResume(r) {
 export function resumeText(r) {
   const parts = [r.contact.headline, r.contact.location, r.summary];
   if (r.showPersonal) parts.push(r.personal.languages);
-  r.experience.forEach((e) => parts.push(e.role, e.company, e.location, ...(e.bullets || [])));
+  r.experience.forEach((e) => parts.push(e.role, e.company, e.type, e.location, ...(e.bullets || [])));
   r.projects.forEach((p) => parts.push(p.name, p.tech, p.description, ...(p.bullets || [])));
   r.skills.forEach((g) => parts.push(g.name, g.items));
   r.education.forEach((e) => parts.push(e.school, e.degree, e.details));

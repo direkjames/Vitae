@@ -171,6 +171,17 @@ code { font: 500 12.5px/1 ui-monospace, 'SF Mono', Menlo, Consolas, monospace; b
 .field input:hover, .field textarea:hover { border-color: #dcd9d2; }
 .field input:focus, .field textarea:focus { outline: none; background: #fff; border-color: var(--ink); box-shadow: var(--ring); }
 .field input:disabled { opacity: 0.55; cursor: not-allowed; }
+.field select {
+  width: 100%; min-height: 40px; padding: 9px 36px 9px 12px;
+  border-radius: 10px; border: 1px solid var(--line); background-color: var(--sunken);
+  color: var(--ink); font-size: 14px; line-height: 1.45; cursor: pointer;
+  -webkit-appearance: none; appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238b8e96' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7 10 5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 11px center;
+  transition: border-color 0.18s, box-shadow 0.18s, background-color 0.18s;
+}
+.field select:hover { border-color: #dcd9d2; }
+.field select:focus { outline: none; background-color: #fff; border-color: var(--ink); box-shadow: var(--ring); }
 .field-check { justify-content: flex-end; }
 
 /* switch */

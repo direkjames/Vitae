@@ -2,7 +2,7 @@
 // Author: direk james
 
 import { esc, icon } from './util.js';
-import { SECTIONS, TEMPLATES, FONTS, ACCENTS, PERSONAL_FIELDS } from './state.js';
+import { SECTIONS, TEMPLATES, FONTS, ACCENTS, PERSONAL_FIELDS, EMPLOYMENT_TYPES } from './state.js';
 import { lintBullet } from './verbs.js';
 import { sectionTitle } from './templates.js';
 
@@ -14,6 +14,12 @@ export const ui = {
 };
 
 /* ---------- Small building blocks ---------- */
+function selectField(label, path, value, options, emptyLabel) {
+  const opts = [`<option value="">${esc(emptyLabel)}</option>`, ...options.map((v) => `<option value="${esc(v)}"${v === value ? ' selected' : ''}>${esc(v)}</option>`)];
+  if (value && !options.includes(value)) opts.push(`<option value="${esc(value)}" selected>${esc(value)}</option>`);
+  return `<label class="field"><span class="field-label">${label}</span><select data-bind="${path}">${opts.join('')}</select></label>`;
+}
+
 function field(label, path, value, o = {}) {
   const ph = o.placeholder ? ` placeholder="${esc(o.placeholder)}"` : '';
   const ctl = o.area
@@ -52,7 +58,7 @@ export function entrySummary(key, e) {
   switch (key) {
     case 'experience': {
       const dates = e.current ? (e.start ? `${e.start} – Present` : 'Present') : [e.start, e.end].filter((x) => String(x || '').trim()).join(' – ');
-      return { title: e.role || e.company || 'New position', sub: j(e.role ? e.company : '', dates) };
+      return { title: e.role || e.company || 'New position', sub: j(e.role ? e.company : '', e.type, dates) };
     }
     case 'projects': return { title: e.name || 'New project', sub: e.tech || '' };
     case 'skills': return { title: e.name || 'Skill group', sub: String(e.items || '').split(',').filter((x) => x.trim()).length + ' skills' };
@@ -72,7 +78,8 @@ ${field('Company', p('company'), e.company, { placeholder: 'e.g. Oneblock Networ
 ${field('Start', p('start'), e.start, { placeholder: 'Jan 2023' })}
 ${field('End', p('end'), e.current ? '' : e.end, { placeholder: e.current ? 'Present' : 'Dec 2024', disabled: e.current })}
 ${field('Location', p('location'), e.location, { placeholder: 'Remote · Manila' })}
-<div class="field field-check">${toggle('I currently work here', p('current'), e.current)}</div>
+${selectField('Employment type', p('type'), e.type || '', EMPLOYMENT_TYPES, 'Not shown')}
+<div class="field full">${toggle('I currently work here', p('current'), e.current)}</div>
 </div>${bulletsEditor(p('bullets'), e.bullets, 'Built a feature that…')}`;
     case 'projects':
       return `<div class="grid2">
