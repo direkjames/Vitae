@@ -1,0 +1,203 @@
+/* Vitae — resume templates. Used by the editor preview, PDF export and published pages.
+   Author: direk james */
+
+.vt-page {
+  --fs: 1;
+  --sp: 1;
+  --ink: #15181e;
+  --ink-2: #3d434f;
+  --muted: #6b7280;
+  --rule: #e4e4e7;
+  --tint: color-mix(in srgb, var(--accent) 9%, #fff);
+  --tint-2: color-mix(in srgb, var(--accent) 22%, #fff);
+  box-sizing: border-box;
+  position: relative;
+  width: var(--page-w);
+  min-height: var(--page-h);
+  padding: calc(13mm * var(--sp)) calc(15mm * var(--sp)) calc(12mm * var(--sp));
+  background: #fff;
+  color: var(--ink);
+  font-family: var(--fb);
+  font-size: calc(9.3pt * var(--fs));
+  line-height: 1.48;
+  font-feature-settings: 'ss01', 'cv11';
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  overflow-wrap: anywhere;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+.vt-page *,
+.vt-page *::before,
+.vt-page *::after { box-sizing: border-box; }
+.vt-page.density-compact { --fs: 0.93; --sp: 0.78; }
+.vt-page.density-spacious { --fs: 1.04; --sp: 1.22; }
+
+.vt-page a { color: inherit; text-decoration: none; }
+.vt-page p { margin: 0; }
+.vt-page h1, .vt-page h2 { margin: 0; font-weight: 700; }
+
+.vt-name {
+  font-family: var(--fh);
+  font-size: 2.55em;
+  line-height: 1.05;
+  letter-spacing: -0.028em;
+  color: var(--ink);
+}
+.vt-headline {
+  margin-top: 0.35em;
+  font-family: var(--fh);
+  font-weight: 600;
+  font-size: 1.12em;
+  letter-spacing: -0.005em;
+  color: var(--accent);
+}
+.vt-contact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25em 1.1em;
+  margin-top: 0.9em;
+  color: var(--ink-2);
+  font-size: 0.93em;
+}
+.vt-contact-item { display: inline-flex; align-items: center; gap: 0.45em; white-space: nowrap; }
+.vt-ci { color: var(--accent); flex: none; }
+.vt-photo { display: block; object-fit: cover; flex: none; }
+
+.vt-sec { margin-top: calc(5.2mm * var(--sp)); }
+.vt-sec:first-child { margin-top: 0; }
+.vt-h {
+  font-family: var(--fh);
+  font-size: 0.8em;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: calc(2.4mm * var(--sp)) !important;
+}
+
+.vt-entry { break-inside: avoid; page-break-inside: avoid; }
+.vt-entry + .vt-entry { margin-top: calc(3.4mm * var(--sp)); }
+.vt-entry-tight + .vt-entry-tight { margin-top: calc(2mm * var(--sp)); }
+.vt-entry-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1em; }
+.vt-entry-title { font-family: var(--fh); font-weight: 650; font-size: 1.06em; color: var(--ink); letter-spacing: -0.005em; }
+.vt-entry-date { flex: none; font-size: 0.88em; color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.vt-entry-sub { color: var(--ink-2); font-weight: 500; margin-top: 0.08em; }
+.vt-link { font-family: var(--fb); font-weight: 500; font-size: 0.86em; color: var(--accent) !important; margin-left: 0.35em; }
+.vt-desc { color: var(--ink-2); margin-top: 0.3em !important; }
+.vt-summary { color: var(--ink-2); }
+
+.vt-bullets { margin: 0.4em 0 0; padding: 0; list-style: none; }
+.vt-bullets li { position: relative; padding-left: 1.1em; color: var(--ink-2); }
+.vt-bullets li + li { margin-top: 0.22em; }
+.vt-bullets li::before {
+  content: '';
+  position: absolute;
+  left: 0.15em;
+  top: 0.62em;
+  width: 0.36em;
+  height: 0.36em;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.85;
+}
+
+.vt-chips { display: flex; flex-wrap: wrap; gap: 0.32em; }
+.vt-chips span {
+  padding: 0.18em 0.6em;
+  border-radius: 99px;
+  background: var(--tint);
+  color: color-mix(in srgb, var(--accent) 75%, #000);
+  font-size: 0.9em;
+  font-weight: 500;
+  line-height: 1.45;
+}
+.vt-skill-group + .vt-skill-group { margin-top: 0.75em; }
+.vt-skill-name { font-weight: 650; color: var(--ink); }
+.vt-skill-group .vt-skill-name { font-size: 0.9em; margin-bottom: 0.32em; }
+.vt-skill-row { color: var(--ink-2); }
+.vt-skill-row + .vt-skill-row { margin-top: 0.22em; }
+
+.vt-dl { margin: 0; display: grid; gap: 0.3em; }
+.vt-dl div { display: grid; grid-template-columns: 7.6em 1fr; gap: 0.6em; }
+.vt-dl dt { color: var(--muted); }
+.vt-dl dd { margin: 0; color: var(--ink); font-weight: 500; }
+
+/* ---------- Meridian: modern two-column ---------- */
+.tpl-meridian .vt-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5em;
+  padding-bottom: calc(5.5mm * var(--sp));
+  margin-bottom: calc(6mm * var(--sp));
+  border-bottom: 1px solid var(--rule);
+}
+.tpl-meridian .vt-photo { width: 25mm; height: 25mm; border-radius: 50%; box-shadow: 0 0 0 3px #fff, 0 0 0 4px var(--tint-2); }
+.tpl-meridian .vt-cols { display: grid; grid-template-columns: minmax(0, 1fr) 58mm; gap: calc(9mm * var(--sp)); }
+.tpl-meridian .vt-side { border-left: 1px solid var(--rule); padding-left: calc(7mm * var(--sp)); }
+.tpl-meridian .vt-side .vt-entry-head { display: block; }
+.tpl-meridian .vt-side .vt-entry-date { display: block; margin-top: 0.1em; }
+.tpl-meridian .vt-side .vt-dl div { grid-template-columns: 1fr; gap: 0; }
+.tpl-meridian .vt-side .vt-dl div + div { margin-top: 0.35em; }
+.tpl-meridian .vt-side .vt-dl dt { font-size: 0.86em; }
+
+/* ---------- Atelier: elegant single column with label gutter ---------- */
+.tpl-atelier { padding-left: calc(16mm * var(--sp)); padding-right: calc(16mm * var(--sp)); }
+.tpl-atelier .vt-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1.5em;
+  padding-bottom: calc(6mm * var(--sp));
+  margin-bottom: calc(6.5mm * var(--sp));
+  border-bottom: 2px solid var(--ink);
+}
+.tpl-atelier .vt-name { font-size: 2.9em; letter-spacing: -0.035em; }
+.tpl-atelier .vt-headline { color: var(--ink-2); font-weight: 500; }
+.tpl-atelier .vt-contact { gap: 0.25em 0.7em; }
+.tpl-atelier .vt-dot { display: inline-block; width: 3px; height: 3px; border-radius: 50%; background: var(--accent); }
+.tpl-atelier .vt-photo { width: 27mm; height: 32mm; border-radius: 3mm; }
+.tpl-atelier .vt-sec { display: grid; grid-template-columns: 31mm minmax(0, 1fr); gap: 0 6mm; margin-top: calc(5.6mm * var(--sp)); }
+.tpl-atelier .vt-sec:first-child { margin-top: 0; }
+.tpl-atelier .vt-h { margin: 0.2em 0 0 !important; font-size: 0.76em; line-height: 1.5; }
+.tpl-atelier .vt-sec + .vt-sec {
+  margin-top: calc(4.6mm * var(--sp));
+  padding-top: calc(4.6mm * var(--sp));
+  border-top: 1px solid var(--rule);
+}
+.tpl-atelier .vt-bullets li::before { border-radius: 0; width: 0.7em; height: 1px; top: 0.78em; left: 0; }
+.tpl-atelier .vt-bullets li { padding-left: 1.3em; }
+
+/* ---------- Plain: ATS-friendly ---------- */
+.tpl-plain { --muted: #4b5563; padding-left: calc(16mm * var(--sp)); padding-right: calc(16mm * var(--sp)); }
+.tpl-plain .vt-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 1.2em; margin-bottom: calc(4.5mm * var(--sp)); }
+.tpl-plain .vt-name { font-size: 2.2em; letter-spacing: -0.02em; }
+.tpl-plain .vt-headline { color: var(--ink); font-weight: 600; font-size: 1.05em; }
+.tpl-plain .vt-contact { display: block; margin-top: 0.5em; color: var(--ink); }
+.tpl-plain .vt-contact-item { display: inline; white-space: normal; }
+.tpl-plain .vt-sep { color: var(--muted); }
+.tpl-plain .vt-photo { width: 24mm; height: 24mm; border-radius: 2mm; }
+.tpl-plain .vt-h {
+  color: var(--ink);
+  font-size: 0.86em;
+  letter-spacing: 0.1em;
+  padding-bottom: 0.35em;
+  border-bottom: 1.2px solid var(--accent);
+}
+.tpl-plain .vt-entry-title { font-weight: 700; }
+.tpl-plain .vt-entry-date { color: var(--ink); }
+.tpl-plain .vt-bullets li { padding-left: 1.1em; color: var(--ink); }
+.tpl-plain .vt-bullets li::before { content: '•'; background: none; width: auto; height: auto; top: 0; left: 0.1em; color: var(--ink); opacity: 1; }
+.tpl-plain .vt-desc,
+.tpl-plain .vt-summary,
+.tpl-plain .vt-skill-row,
+.tpl-plain .vt-entry-sub { color: var(--ink); }
+.tpl-plain .vt-link { color: var(--ink) !important; text-decoration: underline; }
+
+/* ---------- Print ---------- */
+@media print {
+  .vt-page { box-shadow: none !important; margin: 0 !important; min-height: calc(var(--page-h) - 1mm); }
+}
