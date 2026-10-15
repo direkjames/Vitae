@@ -15,9 +15,10 @@ export const SECTIONS = {
 export const DEFAULT_ORDER = ['summary', 'experience', 'projects', 'skills', 'education', 'certifications'];
 
 export const TEMPLATES = [
-  { id: 'meridian', name: 'Meridian', note: 'Modern two-column' },
-  { id: 'atelier', name: 'Atelier', note: 'Elegant single column' },
+  { id: 'meridian', name: 'Meridian', note: 'Modern · 2 columns' },
+  { id: 'atelier', name: 'Atelier', note: 'Elegant · labeled' },
   { id: 'plain', name: 'Plain', note: 'ATS-friendly' },
+  { id: 'harvard', name: 'Harvard', note: 'Classic · serif' },
 ];
 
 export const FONTS = [
@@ -29,10 +30,11 @@ export const FONTS = [
   { id: 'soft', name: 'Soft', head: "'Sora'", body: "'Inter'" },
   { id: 'classic', name: 'Classic', head: "'Inter'", body: "'Inter'" },
 ];
+export const HARVARD_FONT = "'EB Garamond', Garamond, 'Times New Roman', Georgia, serif";
 export const FONT_STACK = ", 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif";
 // Google Fonts families used by the resume (also used by the published page)
 export const GOOGLE_FONTS_URL =
-  'https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400..700&family=Geist:wght@400..700&family=Inter:wght@400..700&family=Manrope:wght@400..800&family=Outfit:wght@400..700&family=Plus+Jakarta+Sans:wght@400..800&family=Sora:wght@400..700&family=Space+Grotesk:wght@400..700&display=swap';
+  'https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400..700&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=Geist:wght@400..700&family=Inter:wght@400..700&family=Manrope:wght@400..800&family=Outfit:wght@400..700&family=Plus+Jakarta+Sans:wght@400..800&family=Sora:wght@400..700&family=Space+Grotesk:wght@400..700&display=swap';
 
 export const ACCENTS = [
   { name: 'Ink', value: '#1E2430' },

@@ -2,7 +2,7 @@
 // Author: direk james
 // Bump VERSION whenever you change app files so users get the update.
 
-const VERSION = 'vitae-v1.0.0';
+const VERSION = 'vitae-v1.1.0';
 const FONT_CACHE = 'vitae-fonts';
 const CORE = [
   './',
@@ -20,6 +20,7 @@ const CORE = [
   './js/verbs.js',
   './js/matcher.js',
   './js/publish.js',
+  './js/guide.js',
   './icons/favicon.svg',
   './icons/icon-192.png',
   './icons/icon-512.png',

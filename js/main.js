@@ -9,7 +9,8 @@ import {
 import { renderResume, resumeText } from './templates.js';
 import { ui, renderContent, renderDesign, renderMatch, renderMatchResults, hintsHTML, entrySummary } from './editor.js';
 import { enableSorting } from './sortable.js';
-import { VERB_GROUPS, applyVerb } from './verbs.js';
+import { PROFESSIONS, applyVerb } from './verbs.js';
+import { openGuide } from './guide.js';
 import { matchResume } from './matcher.js';
 import { buildPublishedPage } from './publish.js';
 
@@ -320,9 +321,21 @@ const actions = {
     commit('structure');
   },
   'set-template': ({ id }) => {
-    active().template = id;
+    const r = active();
+    if (r.template === id) return;
+    r.template = id;
+    // Harvard resumes traditionally lead with Education
+    if (id === 'harvard' && r.sectionOrder[0] !== 'education') {
+      r.sectionOrder = ['education', ...r.sectionOrder.filter((k) => k !== 'education')];
+      r.hidden.education = false;
+      commit('design');
+      toast('Moved Education to the top, the Harvard standard. Drag to change it.', { ms: 4500 });
+      return;
+    }
     commit('design');
   },
+  separators: (_, btn) => openSeparators(btn),
+  guide: () => openGuide(openModal),
   'set-theme': ({ k, v }) => {
     active().theme[k] = v;
     commit('design');
@@ -432,31 +445,62 @@ document.addEventListener('click', (e) => {
 });
 
 /* =========================================================
-   Verb picker
+   Verb picker (by profession) & separator picker
    ========================================================= */
 let verbPop = null;
+let sepPop = null;
+const store2 = {
+  get: (k, d) => { try { return localStorage.getItem('vitae:' + k) ?? d; } catch { return d; } },
+  set: (k, v) => { try { localStorage.setItem('vitae:' + k, v); } catch { /* ignore */ } },
+};
+let verbRole = store2.get('verbRole', 'all');
+
+function placePop(pop, btn) {
+  const b = btn.getBoundingClientRect();
+  const w = pop.offsetWidth;
+  const h = pop.offsetHeight;
+  const left = Math.min(window.innerWidth - w - 12, Math.max(12, b.right - w));
+  let top = b.bottom + 8;
+  if (top + h > window.innerHeight - 12) top = Math.max(12, b.top - h - 8);
+  pop.style.left = left + 'px';
+  pop.style.top = top + 'px';
+}
+
 function closeVerbs() {
   verbPop?.remove();
   verbPop = null;
+  sepPop?.remove();
+  sepPop = null;
 }
+
+function verbGroupsHTML() {
+  const prof = PROFESSIONS.find((p) => p.id === verbRole) || PROFESSIONS[0];
+  return prof.groups
+    .map((g) => `<div class="vg"><div class="vg-name">${esc(g.name)}</div><div class="vg-list">${g.verbs.map((v) => `<button data-verb="${esc(v)}">${esc(v)}</button>`).join('')}</div></div>`)
+    .join('');
+}
+
 function openVerbs(btn, path) {
   if (verbPop?.dataset.path === path) return closeVerbs();
   closeVerbs();
   verbPop = document.createElement('div');
   verbPop.className = 'verb-pop';
   verbPop.dataset.path = path;
-  verbPop.innerHTML = `<div class="verb-head">${icon('wand', 14)}<b>Action verbs</b><small>Tap one to start your bullet with it</small></div>
-<div class="verb-groups">${VERB_GROUPS.map((g) => `<div class="vg"><div class="vg-name">${g.name}</div><div class="vg-list">${g.verbs.map((v) => `<button data-verb="${v}">${v}</button>`).join('')}</div></div>`).join('')}</div>`;
+  verbPop.innerHTML = `<div class="verb-head">${icon('wand', 14)}<b>Action verbs</b><small>Pick your field, then tap a verb to start your bullet with it</small>
+<div class="role-chips">${PROFESSIONS.map((p) => `<button class="role-chip${p.id === verbRole ? ' on' : ''}" data-role="${p.id}">${esc(p.name)}</button>`).join('')}</div></div>
+<div class="verb-groups">${verbGroupsHTML()}</div>`;
   document.body.appendChild(verbPop);
-  const b = btn.getBoundingClientRect();
-  const w = verbPop.offsetWidth;
-  const h = verbPop.offsetHeight;
-  let left = Math.min(window.innerWidth - w - 12, Math.max(12, b.right - w));
-  let top = b.bottom + 8;
-  if (top + h > window.innerHeight - 12) top = Math.max(12, b.top - h - 8);
-  verbPop.style.left = left + 'px';
-  verbPop.style.top = top + 'px';
+  placePop(verbPop, btn);
   verbPop.addEventListener('click', (e) => {
+    const role = e.target.closest('[data-role]')?.dataset.role;
+    if (role) {
+      verbRole = role;
+      store2.set('verbRole', role);
+      $$('.role-chip', verbPop).forEach((c) => c.classList.toggle('on', c.dataset.role === role));
+      $('.verb-groups', verbPop).innerHTML = verbGroupsHTML();
+      $('.verb-groups', verbPop).scrollTop = 0;
+      return;
+    }
     const v = e.target.closest('[data-verb]')?.dataset.verb;
     if (!v) return;
     const r = active();
@@ -475,8 +519,41 @@ function openVerbs(btn, path) {
     closeVerbs();
   });
 }
+
+const SEPARATORS = ['·', '•', '|', '—', '–', '/', '◆', '★', '→', '∙'];
+function openSeparators(btn) {
+  if (sepPop) return closeVerbs();
+  closeVerbs();
+  const input = panelBody.querySelector('[data-bind="contact.headline"]');
+  sepPop = document.createElement('div');
+  sepPop.className = 'sep-pop';
+  sepPop.innerHTML = `<div class="sep-pop-head"><b>Insert a separator</b><small>Added where your cursor is, with spaces around it</small></div>
+<div class="sep-grid">${SEPARATORS.map((c) => `<button data-sep="${c}" title="Insert ${c}">${c}</button>`).join('')}</div>`;
+  document.body.appendChild(sepPop);
+  placePop(sepPop, btn);
+  sepPop.addEventListener('click', (e) => {
+    const sep = e.target.closest('[data-sep]')?.dataset.sep;
+    if (!sep || !input) return;
+    const v = input.value;
+    const start = input.selectionStart ?? v.length;
+    const end = input.selectionEnd ?? v.length;
+    const before = v.slice(0, start).replace(/\s+$/, '');
+    const after = v.slice(end).replace(/^\s+/, '');
+    const ins = (before ? ' ' : '') + sep + ' ';
+    const next = before + ins + after;
+    input.value = next;
+    active().contact.headline = next;
+    commit('content');
+    const pos = (before + ins).length;
+    input.focus();
+    input.setSelectionRange(pos, pos);
+    closeVerbs();
+  });
+}
+
 document.addEventListener('pointerdown', (e) => {
   if (verbPop && !verbPop.contains(e.target) && !e.target.closest('[data-act="verbs"]')) closeVerbs();
+  if (sepPop && !sepPop.contains(e.target) && !e.target.closest('[data-act="separators"]')) closeVerbs();
   if (versionMenuOpen && !e.target.closest('.versions')) closeVersionMenu();
 });
 panelBody.addEventListener('scroll', closeVerbs, { passive: true });
@@ -782,6 +859,10 @@ async function boot() {
   saveState.innerHTML = `${icon('check', 13)}Saved on this device`;
   document.fonts?.ready.then(layoutPaper);
   app.classList.add('ready');
+  if (store2.get('seenGuide', '') !== '1') {
+    store2.set('seenGuide', '1');
+    setTimeout(() => openGuide(openModal), 450);
+  }
   if ('serviceWorker' in navigator && location.protocol.startsWith('http') && !['localhost', '127.0.0.1'].includes(location.hostname)) {
     navigator.serviceWorker.register('./sw.js').catch(() => {});
   }

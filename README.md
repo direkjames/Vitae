@@ -8,7 +8,7 @@ A premium, private resume builder that runs entirely in your browser. No account
 
 - **Form editor** for Profile, Summary, Experience, Projects, Skills, Education and Certifications
 - **Live preview** that updates as you type
-- **3 templates:** Meridian (modern two-column), Atelier (elegant single column) and Plain (ATS-friendly)
+- **4 templates:** Meridian (modern two-column), Atelier (elegant single column), Plain (ATS-friendly) and Harvard (classic serif, Education first)
 - **PDF export** with A4 and US Letter sizes
 - **Auto-save** to your browser (IndexedDB). Nothing leaves your device
 - **Drag to reorder** sections and entries (mouse, touch, or keyboard arrows on the handle)
@@ -20,7 +20,9 @@ A premium, private resume builder that runs entirely in your browser. No account
 - **Installable PWA** that works offline
 - **Job description matcher:** paste a job post to see matched and missing keywords
 - **Themes:** accent colors, 7 sans-serif font pairings, spacing density
-- **Bullet helper:** action-verb picker plus tips (weak openers, missing numbers, long bullets)
+- **Bullet helper:** action verbs by profession (Developer, Teacher, BPO, Retail, Service Crew, Merchandiser, Creative, Editor, Designer, Video Editor, Illustrator) plus tips
+- **Headline separators:** one-tap · • | — and more, inserted at the cursor
+- **Built-in guide:** walkthrough and template comparison, opens on first visit and from the Guide button
 - **Publish as a page:** export a standalone `index.html` of your resume to host on GitHub Pages
 
 ## Project structure
@@ -40,6 +42,7 @@ js/sortable.js        Drag-to-reorder
 js/matcher.js         Job description keyword matcher
 js/verbs.js           Action verbs and bullet tips
 js/publish.js         Standalone page export
+js/guide.js           How-to guide
 icons/                App icons
 ```
 

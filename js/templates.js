@@ -2,7 +2,7 @@
 // Author: direk james
 
 import { esc, cleanUrl, toHref, icon } from './util.js';
-import { SECTIONS, FONTS, FONT_STACK, PAPER, PERSONAL_FIELDS } from './state.js';
+import { SECTIONS, FONTS, FONT_STACK, HARVARD_FONT, PAPER, PERSONAL_FIELDS } from './state.js';
 
 const has = (s) => !!String(s ?? '').trim();
 const nl2br = (s) => esc(s).replace(/\n/g, '<br>');
@@ -139,10 +139,11 @@ function sectionHTML(r, key, skillStyle) {
 export function pageStyle(r) {
   const font = FONTS.find((f) => f.id === r.theme.font) || FONTS[0];
   const paper = PAPER[r.theme.paper] || PAPER.a4;
+  const harvard = r.template === 'harvard';
   return [
-    `--accent:${r.theme.accent}`,
-    `--fh:${font.head}${FONT_STACK}`,
-    `--fb:${font.body}${FONT_STACK}`,
+    `--accent:${harvard ? '#111111' : r.theme.accent}`,
+    `--fh:${harvard ? HARVARD_FONT : font.head + FONT_STACK}`,
+    `--fb:${harvard ? HARVARD_FONT : font.body + FONT_STACK}`,
     `--page-w:${paper.w}mm`,
     `--page-h:${paper.h}mm`,
   ].join(';');
@@ -186,6 +187,65 @@ const TPL = {
 <div class="vt-body">${secs}</div>`,
     );
   },
+};
+
+/* ---------- Harvard: classic, formal, serif ---------- */
+const H = {
+  row(left, right, cls = '') {
+    return `<div class="vt-hrow ${cls}"><div class="vt-hl">${left}</div>${right ? `<div class="vt-hr">${right}</div>` : ''}</div>`;
+  },
+  experience(r) {
+    return r.experience
+      .filter((e) => has(e.role) || has(e.company))
+      .map((e) => {
+        const top = has(e.company) ? e.company : e.role;
+        const role = has(e.company) && has(e.role) ? e.role : '';
+        return `<div class="vt-entry">${H.row(`<b>${esc(top)}</b>`, esc(e.location || ''))}${role || dateRange(e.start, e.end, e.current) ? H.row(`<i>${esc(role)}</i>`, dateRange(e.start, e.end, e.current), 'vt-hsub') : ''}${bulletList(e.bullets)}</div>`;
+      })
+      .join('');
+  },
+  education(r) {
+    return r.education
+      .filter((e) => has(e.school) || has(e.degree))
+      .map((e) => {
+        const top = has(e.school) ? e.school : e.degree;
+        const deg = has(e.school) && has(e.degree) ? e.degree : '';
+        return `<div class="vt-entry">${H.row(`<b>${esc(top)}</b>`, esc(e.location || ''))}${deg || dateRange(e.start, e.end) ? H.row(`<i>${esc(deg)}</i>`, dateRange(e.start, e.end), 'vt-hsub') : ''}${has(e.details) ? `<p class="vt-desc">${nl2br(e.details)}</p>` : ''}</div>`;
+      })
+      .join('');
+  },
+  projects(r) {
+    return r.projects
+      .filter((p) => has(p.name))
+      .map(
+        (p) =>
+          `<div class="vt-entry">${H.row(`<b>${esc(p.name)}</b>${has(p.tech) ? `<i class="vt-htech">, ${esc(p.tech)}</i>` : ''}`, has(p.url) ? `<a href="${esc(toHref(p.url))}">${esc(cleanUrl(p.url))}</a>` : '')}${has(p.description) ? `<p class="vt-desc">${nl2br(p.description)}</p>` : ''}${bulletList(p.bullets)}</div>`,
+      )
+      .join('');
+  },
+  certifications(r) {
+    return r.certifications
+      .filter((c) => has(c.name))
+      .map((c) => `<div class="vt-entry vt-entry-tight">${H.row(`<b>${has(c.url) ? `<a href="${esc(toHref(c.url))}">${esc(c.name)}</a>` : esc(c.name)}</b>${has(c.issuer) ? `, ${esc(c.issuer)}` : ''}`, esc(c.date || ''))}</div>`)
+      .join('');
+  },
+  section(r, key) {
+    if (r.hidden?.[key]) return '';
+    const body = key === 'summary' ? summary(r) : key === 'skills' ? skills(r, 'rows') : H[key](r);
+    if (!body) return '';
+    return `<section class="vt-sec vt-sec-${key}"><h2 class="vt-h">${esc(sectionTitle(r, key))}</h2><div class="vt-sec-body">${body}</div></section>`;
+  },
+};
+
+TPL.harvard = (r) => {
+  const secs = r.sectionOrder.map((k) => H.section(r, k)).join('') + personal(r);
+  const contact = contactItems(r, { icons: false });
+  const c = r.contact;
+  return shell(
+    r,
+    `<header class="vt-header"><h1 class="vt-name">${esc(c.name || 'Your Name')}</h1>${has(c.headline) ? `<div class="vt-headline">${esc(c.headline)}</div>` : ''}${contact.length ? `<div class="vt-contact">${contact.join('<span class="vt-sep"> | </span>')}</div>` : ''}</header>
+<div class="vt-body">${secs}</div>`,
+  );
 };
 
 export function renderResume(r) {

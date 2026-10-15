@@ -197,6 +197,52 @@
 .tpl-plain .vt-entry-sub { color: var(--ink); }
 .tpl-plain .vt-link { color: var(--ink) !important; text-decoration: underline; }
 
+/* ---------- Harvard: classic serif, black and white ---------- */
+.tpl-harvard {
+  --ink: #111;
+  --ink-2: #111;
+  --muted: #111;
+  --rule: #111;
+  font-size: calc(10.6pt * var(--fs));
+  line-height: 1.32;
+  padding: calc(14mm * var(--sp)) calc(17mm * var(--sp)) calc(13mm * var(--sp));
+  font-feature-settings: 'kern', 'liga', 'onum' 0, 'lnum';
+}
+.tpl-harvard .vt-header { text-align: center; margin-bottom: calc(3.5mm * var(--sp)); }
+.tpl-harvard .vt-name { font-size: 2.15em; font-weight: 600; letter-spacing: 0.01em; line-height: 1.1; }
+.tpl-harvard .vt-headline { margin-top: 0.15em; color: #111; font-family: var(--fb); font-weight: 400; font-style: italic; font-size: 1.02em; }
+.tpl-harvard .vt-contact { display: block; margin-top: 0.3em; color: #111; font-size: 0.95em; }
+.tpl-harvard .vt-contact-item { display: inline; white-space: normal; }
+.tpl-harvard .vt-sec { margin-top: calc(3.6mm * var(--sp)); }
+.tpl-harvard .vt-sec:first-child { margin-top: 0; }
+.tpl-harvard .vt-h {
+  font-family: var(--fh);
+  font-size: 1em;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #111;
+  padding-bottom: 0.12em;
+  border-bottom: 0.9px solid #111;
+  margin-bottom: calc(1.8mm * var(--sp)) !important;
+}
+.tpl-harvard .vt-entry + .vt-entry { margin-top: calc(2.4mm * var(--sp)); }
+.tpl-harvard .vt-entry-tight + .vt-entry-tight { margin-top: calc(0.8mm * var(--sp)); }
+.tpl-harvard .vt-hrow { display: flex; justify-content: space-between; align-items: baseline; gap: 1.2em; }
+.tpl-harvard .vt-hr { flex: none; text-align: right; white-space: nowrap; }
+.tpl-harvard .vt-hl b { font-weight: 700; }
+.tpl-harvard .vt-hsub { margin-top: 0.05em; }
+.tpl-harvard .vt-htech { font-weight: 400; }
+.tpl-harvard a { color: #111 !important; }
+.tpl-harvard .vt-desc, .tpl-harvard .vt-summary, .tpl-harvard .vt-skill-row { color: #111; }
+.tpl-harvard .vt-bullets { margin-top: 0.25em; }
+.tpl-harvard .vt-bullets li { color: #111; padding-left: 1.15em; }
+.tpl-harvard .vt-bullets li + li { margin-top: 0.1em; }
+.tpl-harvard .vt-bullets li::before { content: '•'; background: none; width: auto; height: auto; top: 0; left: 0.15em; color: #111; opacity: 1; }
+.tpl-harvard .vt-skill-name { font-weight: 700; color: #111; }
+.tpl-harvard .vt-dl { gap: 0.1em; }
+.tpl-harvard .vt-dl dt { color: #111; font-weight: 700; }
+.tpl-harvard .vt-dl dd { font-weight: 400; }
+
 /* ---------- Print ---------- */
 @media print {
   .vt-page { box-shadow: none !important; margin: 0 !important; min-height: calc(var(--page-h) - 1mm); }
