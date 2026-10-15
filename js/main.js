@@ -185,6 +185,10 @@ panelBody.addEventListener('input', (e) => {
     }
   }
 
+  if (/^education\.\d+\.status$/.test(path)) {
+    const end = panelBody.querySelector(`[data-bind="${path.replace(/status$/, 'end')}"]`);
+    if (end) end.placeholder = val === 'expected' ? 'Expected year, e.g. 2026' : val === 'enrolled' ? 'Present' : '2022';
+  }
   if (path === 'jobPost') {
     commit('content');
     renderMatchSoon();

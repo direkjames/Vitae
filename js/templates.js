@@ -2,7 +2,7 @@
 // Author: direk james
 
 import { esc, cleanUrl, toHref, icon } from './util.js';
-import { SECTIONS, FONTS, FONT_STACK, HARVARD_FONT, PAPER, PERSONAL_FIELDS } from './state.js';
+import { SECTIONS, FONTS, FONT_STACK, HARVARD_FONT, PAPER, PERSONAL_FIELDS, eduStatusText } from './state.js';
 
 const has = (s) => !!String(s ?? '').trim();
 const nl2br = (s) => esc(s).replace(/\n/g, '<br>');
@@ -71,13 +71,25 @@ function projects(r) {
     .join('');
 }
 
+// Education dates and status text, e.g. "2022 – Expected 2026" or "2021 – Present"
+function eduDates(e) {
+  if (e.status === 'expected' && has(e.end)) return [e.start, `Expected ${e.end}`].filter(has).map(esc).join(' – ');
+  if (e.status === 'enrolled' && !has(e.end)) return dateRange(e.start, '', true);
+  return dateRange(e.start, e.end);
+}
+function eduStatus(e) {
+  if (e.status === 'expected' && has(e.end)) return '';
+  if (e.status === 'enrolled' && !has(e.end) && has(e.start)) return '';
+  return eduStatusText(e.status);
+}
+
 function education(r) {
   return r.education
     .filter((e) => has(e.school) || has(e.degree))
     .map(
       (e) => `<div class="vt-entry">
-  <div class="vt-entry-head"><div class="vt-entry-title">${esc(e.degree || e.school)}</div><div class="vt-entry-date">${dateRange(e.start, e.end)}</div></div>
-  ${has(e.degree) && (has(e.school) || has(e.location)) ? `<div class="vt-entry-sub">${[e.school, e.location].filter(has).map(esc).join(' · ')}</div>` : ''}
+  <div class="vt-entry-head"><div class="vt-entry-title">${esc(e.degree || e.school)}</div><div class="vt-entry-date">${eduDates(e)}</div></div>
+  ${(has(e.degree) && (has(e.school) || has(e.location))) || eduStatus(e) ? `<div class="vt-entry-sub">${[has(e.degree) ? e.school : '', eduStatus(e), e.location].filter(has).map(esc).join(' · ')}</div>` : ''}
   ${has(e.details) ? `<p class="vt-desc">${nl2br(e.details)}</p>` : ''}
 </div>`,
     )
@@ -209,8 +221,8 @@ const H = {
       .filter((e) => has(e.school) || has(e.degree))
       .map((e) => {
         const top = has(e.school) ? e.school : e.degree;
-        const deg = has(e.school) && has(e.degree) ? e.degree : '';
-        return `<div class="vt-entry">${H.row(`<b>${esc(top)}</b>`, esc(e.location || ''))}${deg || dateRange(e.start, e.end) ? H.row(`<i>${esc(deg)}</i>`, dateRange(e.start, e.end), 'vt-hsub') : ''}${has(e.details) ? `<p class="vt-desc">${nl2br(e.details)}</p>` : ''}</div>`;
+        const deg = [has(e.school) && has(e.degree) ? e.degree : '', eduStatus(e)].filter(has).join(', ');
+        return `<div class="vt-entry">${H.row(`<b>${esc(top)}</b>`, esc(e.location || ''))}${deg || eduDates(e) ? H.row(`<i>${esc(deg)}</i>`, eduDates(e), 'vt-hsub') : ''}${has(e.details) ? `<p class="vt-desc">${nl2br(e.details)}</p>` : ''}</div>`;
       })
       .join('');
   },
@@ -259,7 +271,7 @@ export function resumeText(r) {
   r.experience.forEach((e) => parts.push(e.role, e.company, e.type, e.location, ...(e.bullets || [])));
   r.projects.forEach((p) => parts.push(p.name, p.tech, p.description, ...(p.bullets || [])));
   r.skills.forEach((g) => parts.push(g.name, g.items));
-  r.education.forEach((e) => parts.push(e.school, e.degree, e.details));
+  r.education.forEach((e) => parts.push(e.school, e.degree, eduStatusText(e.status), e.details));
   r.certifications.forEach((c) => parts.push(c.name, c.issuer));
   return parts.filter(Boolean).join('\n');
 }

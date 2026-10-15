@@ -2,7 +2,7 @@
 // Author: direk james
 
 import { esc, icon } from './util.js';
-import { SECTIONS, TEMPLATES, FONTS, ACCENTS, PERSONAL_FIELDS, EMPLOYMENT_TYPES } from './state.js';
+import { SECTIONS, TEMPLATES, FONTS, ACCENTS, PERSONAL_FIELDS, EMPLOYMENT_TYPES, EDU_STATUS, eduStatusText } from './state.js';
 import { lintBullet } from './verbs.js';
 import { sectionTitle } from './templates.js';
 
@@ -14,10 +14,12 @@ export const ui = {
 };
 
 /* ---------- Small building blocks ---------- */
-function selectField(label, path, value, options, emptyLabel) {
-  const opts = [`<option value="">${esc(emptyLabel)}</option>`, ...options.map((v) => `<option value="${esc(v)}"${v === value ? ' selected' : ''}>${esc(v)}</option>`)];
-  if (value && !options.includes(value)) opts.push(`<option value="${esc(value)}" selected>${esc(value)}</option>`);
-  return `<label class="field"><span class="field-label">${label}</span><select data-bind="${path}">${opts.join('')}</select></label>`;
+// options: strings, or [value, label] pairs
+function selectField(label, path, value, options, emptyLabel, o = {}) {
+  const pairs = options.map((x) => (Array.isArray(x) ? [x[0], x[1]] : [x, x]));
+  const opts = [`<option value="">${esc(emptyLabel)}</option>`, ...pairs.map(([v, l]) => `<option value="${esc(v)}"${v === value ? ' selected' : ''}>${esc(l)}</option>`)];
+  if (value && !pairs.some(([v]) => v === value)) opts.push(`<option value="${esc(value)}" selected>${esc(value)}</option>`);
+  return `<label class="field${o.full ? ' full' : ''}"><span class="field-label">${label}</span><select data-bind="${path}">${opts.join('')}</select>${o.hint ? `<span class="field-hint">${o.hint}</span>` : ''}</label>`;
 }
 
 function field(label, path, value, o = {}) {
@@ -62,7 +64,7 @@ export function entrySummary(key, e) {
     }
     case 'projects': return { title: e.name || 'New project', sub: e.tech || '' };
     case 'skills': return { title: e.name || 'Skill group', sub: String(e.items || '').split(',').filter((x) => x.trim()).length + ' skills' };
-    case 'education': return { title: e.degree || e.school || 'New education', sub: e.degree ? e.school : '' };
+    case 'education': return { title: e.degree || e.school || 'New education', sub: j(e.degree ? e.school : '', eduStatusText(e.status)) };
     case 'certifications': return { title: e.name || 'New certification', sub: j(e.issuer, e.date) };
     default: return { title: '', sub: '' };
   }
@@ -98,8 +100,9 @@ ${field('Skills', p('items'), e.items, { area: true, rows: 2, full: true, placeh
 ${field('Degree / course', p('degree'), e.degree, { placeholder: 'BS Information Technology', full: true })}
 ${field('School', p('school'), e.school, { placeholder: 'University name' })}
 ${field('Location', p('location'), e.location, { placeholder: 'City' })}
+${selectField('Status', p('status'), e.status || '', EDU_STATUS.map(([v, l]) => [v, l]), 'Not shown', { full: true, hint: 'For “Expected to graduate”, put your expected year in End.' })}
 ${field('Start', p('start'), e.start, { placeholder: '2018' })}
-${field('End', p('end'), e.end, { placeholder: '2022' })}
+${field('End', p('end'), e.end, { placeholder: e.status === 'expected' ? 'Expected year, e.g. 2026' : e.status === 'enrolled' ? 'Present' : '2022' })}
 ${field('Details', p('details'), e.details, { area: true, rows: 2, full: true, spell: true, placeholder: 'Honors, thesis, relevant coursework (optional)' })}
 </div>`;
     case 'certifications':

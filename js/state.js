@@ -67,7 +67,18 @@ export const EMPLOYMENT_TYPES = ['Full-time', 'Part-time', 'Contractual', 'Proje
 export const newExperience = () => ({ id: uid(), role: '', company: '', type: '', location: '', start: '', end: '', current: false, bullets: [''] });
 export const newProject = () => ({ id: uid(), name: '', url: '', tech: '', description: '', bullets: [] });
 export const newSkillGroup = () => ({ id: uid(), name: '', items: '' });
-export const newEducation = () => ({ id: uid(), school: '', degree: '', location: '', start: '', end: '', details: '' });
+// [value, label in the editor, text shown on the resume]
+export const EDU_STATUS = [
+  ['graduated', 'Graduated', 'Graduated'],
+  ['enrolled', 'Currently enrolled', 'Currently enrolled'],
+  ['expected', 'Expected to graduate', 'Expected'],
+  ['undergraduate', 'Undergraduate', 'Undergraduate'],
+  ['units', 'Units earned (not completed)', 'Units earned'],
+  ['coursework', 'Coursework completed', 'Coursework completed'],
+  ['attended', "Didn't graduate (shows “Attended”)", 'Attended'],
+];
+export const eduStatusText = (v) => (EDU_STATUS.find((s) => s[0] === v) || [])[2] || '';
+export const newEducation = () => ({ id: uid(), school: '', degree: '', status: '', location: '', start: '', end: '', details: '' });
 export const newCertification = () => ({ id: uid(), name: '', issuer: '', date: '', url: '' });
 export const FACTORY = {
   experience: newExperience,
