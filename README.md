@@ -1,67 +1,73 @@
+<div align="center">
+
 # Vitae
 
-A premium, private resume builder that runs entirely in your browser. No account, no server, no tracking. Works offline and installs like an app.
+**A private resume builder that runs in your browser.**
 
-**Author:** direk james
+![Status: Shipped](https://img.shields.io/badge/status-shipped-brightgreen)
+![Platform: Web and installable app](https://img.shields.io/badge/platform-web%20%2B%20installable-blue)
+![Works offline](https://img.shields.io/badge/works-offline-0c0d10)
+![License: All rights reserved](https://img.shields.io/badge/license-all%20rights%20reserved-lightgrey)
+
+<img src="docs/screenshots/hero-1920x1080.png" alt="Four resume templates, Harvard, Plain, Atelier and Meridian, fanned out like sheets of paper" width="880">
+
+<img src="docs/screenshots/hero-1680x1050.png" alt="Vitae's job match tab next to a live resume preview" width="880">
+
+## About
+
+Vitae helps you build a polished resume in minutes. Fill in a form, watch the resume update as you type, and download it as a PDF.
+
+There is no account, no server and no tracking. Your resume is saved on your device, and Vitae works offline and installs like an app.
+
+**[Try it: direkjames.github.io/Vitae](https://direkjames.github.io/Vitae/)**
+
+</div>
 
 ## Features
 
-- **Form editor** for Profile, Summary, Experience, Projects, Skills, Education and Certifications
-- **Live preview** that updates as you type
-- **4 templates:** Meridian (modern two-column), Atelier (elegant single column), Plain (ATS-friendly) and Harvard (classic serif, Education first)
-- **PDF export** with A4 and US Letter sizes
-- **Auto-save** to your browser (IndexedDB). Nothing leaves your device
-- **Drag to reorder** sections and entries (mouse, touch, or keyboard arrows on the handle)
-- **Multiple versions**, e.g. "Minecraft dev", "Web dev", "General VA"
-- **Backup & import** of all versions as a `.json` file
-- **One-page fit indicator** that warns when content spills onto page 2
-- **Optional photo and personal details**, toggleable for local or international applications
+- **Form editor** for Profile, Summary, Experience, Projects, Skills, Education and Certifications, with a **live preview**
+- **Four templates:** Meridian (modern two-column), Atelier (elegant single column), Plain (ATS-friendly) and Harvard (classic serif, Education first)
+- **PDF export** in A4 or US Letter
+- **One-page check** that warns you when your content spills onto a second page
+- **Job description matcher:** paste a job post to see which keywords you have and which are missing
+- **Multiple versions** of your resume, such as "Minecraft dev", "Web dev" or "General VA"
+- **Drag to reorder** sections and entries, with a mouse, touch or the arrow keys
+- **Themes:** accent colors, seven font pairings and spacing options
+- **Bullet helper:** action verbs for many jobs (such as developer, teacher, BPO, retail and designer) plus tips
+- **Headline separators** you can insert with one tap
+- **Optional photo and personal details**, which you can switch off for international applications
 - **Projects with links** to show off your work
-- **Installable PWA** that works offline
-- **Job description matcher:** paste a job post to see matched and missing keywords
-- **Themes:** accent colors, 7 sans-serif font pairings, spacing density
-- **Bullet helper:** action verbs by profession (Developer, Teacher, BPO, Retail, Service Crew, Merchandiser, Creative, Editor, Designer, Video Editor, Illustrator) plus tips
-- **Headline separators:** one-tap · • | — and more, inserted at the cursor
-- **Built-in guide:** walkthrough and template comparison, opens on first visit and from the Guide button
-- **Publish as a page:** export a standalone `index.html` of your resume to host on GitHub Pages
+- **Auto-save** on your device, and **backup and import** of all your versions as a file
+- **Publish as a page:** export your resume as a web page you can host for free
+- **Built-in guide** that opens on your first visit
+- **Installable and offline**
 
-## Project structure
+## Getting started
 
-```
-index.html            App shell
-manifest.webmanifest  PWA manifest
-sw.js                 Service worker (offline cache)
-css/app.css           App interface styles
-css/resume.css        Resume templates (also embedded in published pages)
-js/main.js            App controller and event handling
-js/state.js           Data model, defaults, versions, backup
-js/db.js              IndexedDB storage
-js/templates.js       Resume HTML renderers
-js/editor.js          Editor panels (Content, Design, Job match)
-js/sortable.js        Drag-to-reorder
-js/matcher.js         Job description keyword matcher
-js/verbs.js           Action verbs and bullet tips
-js/publish.js         Standalone page export
-js/guide.js           How-to guide
-icons/                App icons
-```
+1. Open [direkjames.github.io/Vitae](https://direkjames.github.io/Vitae/) in your browser.
+2. Fill in your details in the **Content** tab, and pick a look in the **Design** tab.
+3. Paste a job post in the **Job match** tab to see what your resume is missing.
+4. Press **Download PDF**.
 
-No build step and no dependencies. Plain HTML, CSS and JavaScript modules.
+To use it like an app, press **Install** in your browser. To keep a copy of your work, press **Backup**.
 
-## Run locally
+## Requirements
 
-ES modules need a local server (opening `index.html` directly won't work). In VS Code, use the **Live Server** extension, or run:
+- A modern web browser (Chrome, Edge, Firefox or Safari)
+- An internet connection the first time, to load the fonts
 
-```
-python -m http.server 8000
-```
+## Built with
 
-Then open http://localhost:8000. (The service worker only activates on the live site, so local testing always loads fresh files.)
+- HTML, CSS and JavaScript, with no build step and no dependencies
+- A service worker and IndexedDB for offline use and saving
+- [Google Fonts](https://fonts.google.com)
 
-## Deploy to GitHub Pages
+Want to run it yourself? See [Developing Vitae](docs/DEVELOPING.md).
 
-1. Create a repository named `vitae` and push these files to the `main` branch.
-2. On GitHub go to **Settings → Pages**, set Source to **Deploy from a branch**, and choose `main` / `(root)`.
-3. Your app will be live at `https://direkjames.github.io/vitae/`.
+## Status
 
-When you ship an update, bump `VERSION` in `sw.js` (e.g. `vitae-v1.0.1`) so installed copies pick up the new files.
+Shipped.
+
+## Credits / License
+
+Made by [direkjames](https://github.com/direkjames). All rights reserved. See [LICENSE](LICENSE).
